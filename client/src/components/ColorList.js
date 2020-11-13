@@ -10,11 +10,24 @@ const ColorList = ({ colors, updateColors }) => {
   // console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [colorToAdd, setColorToAdd] = useState(initialColor);
 
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
   };
+
+  const addColor = (e) => {
+    e.preventDefault();
+    axiosWithAuth().post('http://localhost:5000/api/colors', colorToAdd)
+      .then(res => {
+        console.log(res.data);
+        updateColors();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   const saveEdit = e => {
     e.preventDefault();
@@ -62,6 +75,27 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
+      
+      <form onSubmit={addColor}>
+          <legend>Add color</legend>
+          <label>color name:
+            <input
+              type="text"
+              name="color"
+              value={colorToAdd.color}
+              onChange={e => setColorToAdd({ ...colorToAdd, color: e.target.value })}
+            />
+          </label>
+          <label>hex code:
+            <input
+              type="text"
+              name="color"
+              value={colorToAdd.code.hex}
+              onChange={e => setColorToAdd({ ...colorToAdd, code: {hex : e.target.value }})}
+            />
+          </label>
+          <button>Add Color</button>
+      </form>
       {editing && (
         <form onSubmit={saveEdit}>
           <legend>edit color</legend>
