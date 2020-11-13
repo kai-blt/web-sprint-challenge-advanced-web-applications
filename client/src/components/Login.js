@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
   const [login, setLogin] = useState({username: '', password: ''});
+
+  const history = useHistory();
 
   //handlers
   const handleChange = (e) => {
@@ -20,6 +23,7 @@ const Login = () => {
       .then(res => {
         console.log(res);
         localStorage.setItem('token', res.data.payload);
+        history.push('/bubblepage')
       })
       .catch(err => {
         console.log(err);
